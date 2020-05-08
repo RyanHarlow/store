@@ -1,0 +1,33 @@
+CREATE TABLE person(
+    id SERIAL,
+    first_name VARCHAR NOT NULL,
+    last_name VARCHAR NOT NULL,
+    email VARCHAR UNIQUE NOT NULL,
+    hash VARCHAR NOT NULL,
+    permission VARCHAR NOT NULL
+)
+
+CREATE TABLE item(
+    id SERIAL,
+    name VARCHAR NOT NULL,
+    qtyinstock INT NOT NULL,
+    description VARCHAR,
+    photos VARCHAR[],
+    price MONEY,
+    category INT,
+)
+
+CREATE TABLE category(
+    id SERIAL,
+    name VARCHAR NOTNULL,
+    subcategoryof INT
+)
+
+CREATE TABLE order(
+    date VARCHAR,
+    items INT[],
+    account INT,
+    address VARCHAR
+)
+
+session
