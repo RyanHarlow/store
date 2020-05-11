@@ -14,7 +14,17 @@ schema
     .has().digits();
 
 router.get('/', function (req, res) {
-    res.send('person')
+    if(!req.session.user){
+        res.json({user: null})
+    }else{
+        db.Person.findOne({ where: {email: req.session.user} }).then(person => {
+            let user = person.dataValues;
+            delete user["hash"];
+            res.json({user})
+        }).catch(err => {
+            res.json({err: 'Error authenticating'})
+        })
+    }
 })
 
 router.post('/', function(req, res){
@@ -26,10 +36,14 @@ router.post('/', function(req, res){
     if(validEmail && validPassword){
         bcrypt.hash(password, saltRounds, function(err, hash) {
             try {
-                db.Person.create({firstName, lastName, email, hash}).then(person => {
-                    console.log("new person auto-generated ID:", person.id);
-                    req.session.user = email;
-                    res.json({success: 'User Created'});
+                db.Person.findOrCreate({where: {email: email}, defaults:{firstName, lastName, email, hash}}).then(([person, created]) => {
+                    if(!created){
+                        res.json({err: 'User with entered email already exists'})
+                    }else {
+                        console.log("new person auto-generated ID:", person.id);
+                        req.session.user = email;
+                        res.json({success: 'User Created'});
+                    }
                 });
             }catch(error){
                 res.json({err: 'there was an error generating your account'})
@@ -40,6 +54,42 @@ router.post('/', function(req, res){
     }else{
         res.json({err: 'email not valid'})
     }
+})
+
+router.post('/login', (req,res) => {
+    const {email, password} = req.body;
+
+    db.Person.findOne({where: {email}}).then(person => {
+        if(!person){
+            res.json({err: 'Incorrect email or password'})
+        }else{
+            bcrypt.compare(password, person.dataValues.hash, function(err, result) {
+                if(err){
+                    res.json({err: 'There was an error logging in'})
+                }else{
+                    if(result){
+                        req.session.user = email;
+                        res.json({success: 'User Logged in'})
+                    }else{
+                        res.json({err: 'Incorrect email or password'})
+                    }
+                }
+
+            });
+        }
+    }).catch(err => {
+        res.send({err: 'There was an error logging in'})
+    })
+})
+
+router.post('/logout', (req, res) => {
+    req.session.destroy(function(err) {
+        if(err){
+            res.json({err: 'error logging out'})
+        }else{
+            res.json({success: 'you have been logged out'})
+        }
+    })
 })
 
 
