@@ -31,9 +31,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+app.use("/static", express.static(__dirname + "/static"));
 app.use(express.static(root));
 
 app.use('/api', api)
+
 
 app.get("*", (req, res) => {
     res.sendFile('index.html', { root });

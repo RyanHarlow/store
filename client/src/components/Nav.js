@@ -1,6 +1,50 @@
 import React from 'react';
+import { connect } from "react-redux";
+import {Link} from 'react-router-dom';
+
+
+
+
+const mapStateToProps = state => {
+    return { isLoggedIn: state.isLoggedIn };
+};
 
 function Nav(props){
+    console.log(props)
+
+    let buttons = null;
+    console.log(props.isLoggedIn)
+    if(props.isLoggedIn === true){
+        buttons = (
+            <div className="buttons">
+                <button className="button is-light">
+                    <strong>Logout</strong>
+                </button>
+            </div>
+        )
+    }
+    if(props.isLoggedIn === false){
+        buttons = (
+            <div className="buttons">
+                <Link to='/signup'>
+                <button className="button is-light">
+                    <strong>Sign up</strong>
+                </button>
+                </Link>
+                <Link to='/login'>
+                <button className="button is-light">
+                    <strong>
+                        Log in
+                    </strong>
+                </button>
+                    </Link>
+            </div>
+        )
+    }
+
+
+
+
     return(
         <nav className="navbar is-black" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
@@ -46,16 +90,7 @@ function Nav(props){
 
                 <div className="navbar-end">
                     <div className="navbar-item">
-                        <div className="buttons">
-                            <a className="button is-light">
-                                <strong>Sign up</strong>
-                            </a>
-                            <a className="button is-light">
-                                <strong>
-                                    Log in
-                                </strong>
-                            </a>
-                        </div>
+                        {buttons}
                     </div>
                 </div>
             </div>
@@ -63,4 +98,7 @@ function Nav(props){
 )
 }
 
-    export default Nav;
+
+export default connect(
+    mapStateToProps
+)(Nav);

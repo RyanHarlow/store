@@ -1,7 +1,7 @@
 import { SET_LOGGED_IN } from '../constants/action-types';
 
 const initialState = {
-    isLoggedIn: true
+    isLoggedIn: undefined
 }
 
 function rootReducer(state = initialState, action){

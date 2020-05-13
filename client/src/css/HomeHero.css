@@ -1,0 +1,27 @@
+.hero-content{
+    display: flex;
+    align-items: center;
+}
+
+.hero-content{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: grey;
+    margin: 0;
+    padding: 0;
+}
+
+.home-hero{
+    margin: 0;
+    padding: 0;
+}
+
+.home-hero-body{
+    padding: 0;
+    margin: 0;
+}
+
+.hero-img{
+    width: 35rem;
+}

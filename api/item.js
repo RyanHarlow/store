@@ -2,8 +2,9 @@ const express = require('express')
 const router = express.Router()
 
 
-router.get('/', function (req, res) {
-    res.send('item')
+router.post('/', (req, res) => {
+    const {name, qtyInStock, description, price, category} = req.body;
+    //photos
 })
 
 
